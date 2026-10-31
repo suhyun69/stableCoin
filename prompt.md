@@ -23,6 +23,6 @@ CREATE TABLE idempotency_demo (
   idempotency_key text PRIMARY KEY,
   payout_id text NOT NULL
 );
-INSERT INTO idempotency_demo (itempotency_key, payout_id) VALUES ('request-001', 'pay_001');
+INSERT INTO idempotency_demo (idempotency_key, payout_id) VALUES ('request-001', 'pay_001');
 DROP TABLE idempotency_demo;
 \q
