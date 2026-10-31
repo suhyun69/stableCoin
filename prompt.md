@@ -30,3 +30,11 @@ DROP TABLE idempotency_demo;
 curl -L https://getfoundry.sh/install | bash && export PATH="$PATH:$HOME/.foundry/bin" && foundryup && anvil --version
 anvil --chain-id 31337
 curl -s -X POST http://127.0.0.1:8545 -H 'content-type: application/json' --data '{"jsonrpc":"2.0", "id":1, "method":"eth_chainId", "params":[]}'
+
+npm i viem
+set -a
+source .env
+set +a
+npm test
+curl -i http://localhost:3000/dependencies/chain
+npx tsx --env-file=.env scripts/chain-demo.ts

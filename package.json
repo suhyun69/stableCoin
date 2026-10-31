@@ -14,7 +14,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "fastify": "^5.12.7"
+    "fastify": "^5.12.7",
+    "viem": "^2.57.13"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
