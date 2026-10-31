@@ -26,3 +26,7 @@ CREATE TABLE idempotency_demo (
 INSERT INTO idempotency_demo (idempotency_key, payout_id) VALUES ('request-001', 'pay_001');
 DROP TABLE idempotency_demo;
 \q
+
+curl -L https://getfoundry.sh/install | bash && export PATH="$PATH:$HOME/.foundry/bin" && foundryup && anvil --version
+anvil --chain-id 31337
+curl -s -X POST http://127.0.0.1:8545 -H 'content-type: application/json' --data '{"jsonrpc":"2.0", "id":1, "method":"eth_chainId", "params":[]}'
