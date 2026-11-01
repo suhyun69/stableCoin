@@ -38,3 +38,9 @@ set +a
 npm test
 curl -i http://localhost:3000/dependencies/chain
 npx tsx --env-file=.env scripts/chain-demo.ts
+
+npm test -- create-payout.http.test.ts
+curl -i -X POST http://localhost:3000/payouts \
+  -H 'content-type: application/json' \
+  -H 'idempotency-key: payout-2026-001' \
+  -d '{"merchantId":"merchant_demo_01","recipientAddress":"0x1111111111111111111111111111111111111111","amount":"25.50"}'
