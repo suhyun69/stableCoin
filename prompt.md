@@ -107,3 +107,46 @@ CREATE TABLE outbox_messages (
   created_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (aggregate_type, aggregate_id, type)
 );
+
+npm install pg
+npm install -D @types/pg
+
+npm test -- create-payout-with-outbox.integration.test.ts
+
+CREATE TABLE payout_status_history (
+  id text PRIMARY KEY,
+  payout_id text NOT NULL REFERENCES payouts(id),
+  from_status text,
+  to_status text NOT NULL,
+  reason text NOT NULL,
+  occurred_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE outbox_messages (
+  id text PRIMARY KEY,
+  aggregate_type text NOT NULL,
+  aggregate_id text NOT NULL REFERENCES payouts(id),
+  type text NOT NULL,
+  payload jsonb NOT NULL,
+  status text NOT NULL DEFAULT 'PENDING',
+  attempts integer NOT NULL DEFAULT 0,
+  available_at timestamptz NOT NULL DEFAULT now(),
+  locked_at timestamptz,
+  locked_by text,
+  published_at timestamptz,
+  last_error text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (aggregate_type, aggregate_id, type)
+);
+
+SELECT id, idempotency_key, amount_atomic, status
+FROM payouts
+WHERE idempotency_key = 'payout-2026-005';
+
+SELECT to_status, reason
+FROM payout_status_history
+WHERE payout_id = '<방금 조회한 payout id>';
+
+SELECT aggregate_id, type, status, payload
+FROM outbox_messages
+WHERE aggregate_id = '<방금 조회한 payout id>';
