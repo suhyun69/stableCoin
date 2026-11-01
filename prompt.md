@@ -150,3 +150,7 @@ WHERE payout_id = '<방금 조회한 payout id>';
 SELECT aggregate_id, type, status, payload
 FROM outbox_messages
 WHERE aggregate_id = '<방금 조회한 payout id>';
+
+npm install bullmq ioredis
+docker compose up -d
+docker compose ps
