@@ -44,3 +44,38 @@ curl -i -X POST http://localhost:3000/payouts \
   -H 'content-type: application/json' \
   -H 'idempotency-key: payout-2026-001' \
   -d '{"merchantId":"merchant_demo_01","recipientAddress":"0x1111111111111111111111111111111111111111","amount":"25.50"}'
+
+/*****/
+docker compose exec postgres psql -U stablepay -d stablepay
+
+CREATE TABLE payouts (
+  id text PRIMARY KEY,
+  idempotency_key text NOT NULL UNIQUE,
+  merchant_id text NOT NULL,
+  recipient_address text NOT NULL,
+  amount_atomic numeric(78, 0) NOT NULL CHECK (amount_atomic > 0),
+  request_fingerprint text NOT NULL,
+  status text NOT NULL CHECK (
+    status IN ('REQUESTED', 'AWAITING_CONFIRMATION', 'SETTLED', 'FAILED', 'REQUIRES_REVIEW')
+  ),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+set -a
+source .env
+set +a
+forge create contracts/MockUSDC.sol:MockUSDC \
+  --rpc-url "$ANVIL_RPC_URL" \
+  --private-key "$ANVIL_PRIVATE_KEY" \
+  --broadcast \
+  --constructor-args 1000000000000
+
+npm i pg
+
+anvil --chain-id 31337 --hardfork paris
+forge create contracts/MockUSDC.sol:MockUSDC \
+  --rpc-url "$ANVIL_RPC_URL" \
+  --private-key "$ANVIL_PRIVATE_KEY" \
+  --broadcast \
+  --constructor-args 1000000000000
+/*****/

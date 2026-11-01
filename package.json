@@ -7,6 +7,7 @@
     "test": "vitest run",
     "dev": "tsx watch src/api/main.ts",
     "start": "tsx src/api/main.ts",
+    "demo:chain-first-crash": "tsx --env-file=.env src/demo/chain-first-crash-server.ts",
     "test:watch": "vitest"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
   "type": "module",
   "dependencies": {
     "fastify": "^5.12.7",
+    "pg": "^8.23.1",
     "viem": "^2.57.13"
   },
   "devDependencies": {
